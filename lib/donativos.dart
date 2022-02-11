@@ -39,7 +39,10 @@ class _DonativosState extends State<Donativos> {
             SizedBox(
               height: 24,
             ),
-            Divider(),
+            Divider(
+              color: Colors.blueGrey,
+              thickness: 2.0,
+            ),
             ListTile(
               leading: Icon(
                 Icons.money,
@@ -50,7 +53,11 @@ class _DonativosState extends State<Donativos> {
                 "${widget.donativos["acumulado"] ?? 0.0}",
                 style: TextStyle(fontSize: 32),
               ),
-            )
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Center(child: Image.asset("assets/thank-you.png"))
           ],
         ),
       ),
