@@ -10,8 +10,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  double? _donation_total = 0.0;
-  double? _donation_dropdown;
+  int? _donation_total = 0;
+
+  int _paypal = 0;
+  int _tarjeta = 0;
+  int _acumulado = 0;
+  bool _goalMet = false;
+
+  int? _dropDownValue = null;
+  var _dropDownGroup = {1: "1", 10: "10", 69: "69", 100: "100", 1000: "1000"};
+
+  dropDownGen() {
+    return _dropDownGroup.entries
+        .map((item) => DropdownMenuItem(
+              child: Text(item.value),
+              value: item.key,
+            ))
+        .toList();
+  }
+
   int? currentRadio;
   var assetsRadioGroup = {0: "assets/paypal.png", 1: "assets/credit-card.png"};
   var radioGroup = {0: "Paypal", 1: "Tarjeta"};
@@ -75,30 +92,13 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Text("Cantidad a donar: "),
-              trailing: DropdownButton<double>(
+              trailing: DropdownButton<int>(
                   hint: Text(" "),
-                  value: _donation_dropdown,
-                  items: <double>[
-                    0.0,
-                    1.0,
-                    5.0,
-                    10.0,
-                    20.0,
-                    50.0,
-                    100.0,
-                    200.0,
-                    500.0,
-                    1000.0,
-                    10000.0
-                  ].map((double value) {
-                    return new DropdownMenuItem<double>(
-                      value: value,
-                      child: new Text(value.toString()),
-                    );
-                  }).toList(),
+                  value: _dropDownValue,
+                  items: dropDownGen(),
                   onChanged: (newVal) {
                     setState(() {
-                      _donation_dropdown = newVal;
+                      _dropDownValue = newVal;
                     });
                   }),
             ),
@@ -107,14 +107,11 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.white10,
               animation: true,
               animateFromLastPercent: true,
-              percent: _donation_total! / 10000 > 1.0
-                  ? 1.0
-                  : _donation_total! / 10000,
-              progressColor:
-                  (_donation_total! > 0) ? Colors.purple[300] : Colors.white10,
-              center: (_donation_total! / 100 < 100)
+              percent: _acumulado / 10000 > 1.0 ? 1.0 : _acumulado / 10000,
+              progressColor: (_acumulado > 0) ? Colors.purple : Colors.white10,
+              center: (_acumulado / 100 < 100)
                   ? Text(
-                      (_donation_total! / 100).toString() + "%",
+                      (_acumulado / 100).toString() + "%",
                       style: TextStyle(fontSize: 15.0, color: Colors.black),
                     )
                   : Text(
@@ -122,9 +119,25 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(fontSize: 15.0, color: Colors.black),
                     ),
             ),
+            SizedBox(
+              height: 25,
+            ),
             ElevatedButton(
                 onPressed: () {
                   // Respond to button press
+                  if (_dropDownValue != null) {
+                    if (currentRadio == 0) {
+                      _paypal += _dropDownValue!;
+                    } else if (currentRadio == 1) {
+                      _tarjeta += _dropDownValue!;
+                    }
+                    _acumulado += _dropDownValue!;
+
+                    if (_acumulado >= 10000) {
+                      _goalMet = true;
+                    }
+                  }
+                  setState(() {});
                 },
                 child: Text(
                   'Donar',
@@ -142,10 +155,10 @@ class _HomePageState extends State<HomePage> {
             MaterialPageRoute(
                 builder: (context) => Donativos(
                       donativos: {
-                        "paypal": 0.0,
-                        "tarjeta": 0.0,
-                        "acumulado": 0.0,
-                        "goalMet": false
+                        "paypal": _paypal,
+                        "tarjeta": _tarjeta,
+                        "acumulado": _acumulado,
+                        "goalMet": _goalMet
                       },
                     )),
           );
