@@ -18,7 +18,15 @@ class _HomePageState extends State<HomePage> {
   bool _goalMet = false;
 
   int? _dropDownValue = null;
-  var _dropDownGroup = {1: "1", 10: "10", 69: "69", 100: "100", 1000: "1000"};
+  var _dropDownGroup = {
+    1: "1",
+    10: "10",
+    69: "69",
+    100: "100",
+    350: "350",
+    999: "999",
+    1000: "1000"
+  };
 
   dropDownGen() {
     return _dropDownGroup.entries
@@ -40,7 +48,10 @@ class _HomePageState extends State<HomePage> {
                 height: 64,
                 width: 24,
               ),
-              title: Text("${item.value}"),
+              title: Text(
+                "${item.value}",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               trailing: Radio(
                 value: item.key,
                 groupValue: currentRadio,
@@ -128,10 +139,11 @@ class _HomePageState extends State<HomePage> {
                   if (_dropDownValue != null) {
                     if (currentRadio == 0) {
                       _paypal += _dropDownValue!;
+                      _acumulado += _dropDownValue!;
                     } else if (currentRadio == 1) {
                       _tarjeta += _dropDownValue!;
+                      _acumulado += _dropDownValue!;
                     }
-                    _acumulado += _dropDownValue!;
 
                     if (_acumulado >= 10000) {
                       _goalMet = true;
@@ -145,7 +157,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(Size(1500, 50)),
-                ))
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.deepPurple),
+                )),
           ],
         ),
       ),

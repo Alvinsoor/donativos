@@ -9,6 +9,18 @@ class Donativos extends StatefulWidget {
 }
 
 class _DonativosState extends State<Donativos> {
+  displayImage(bool n) {
+    if (n) {
+      return Center(
+        child: Container(
+          child: Image.asset("assets/thank-you.png"),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +69,7 @@ class _DonativosState extends State<Donativos> {
             SizedBox(
               height: 30,
             ),
-            Center(child: Image.asset("assets/thank-you.png"))
+            displayImage(widget.donativos["goalMet"])
           ],
         ),
       ),
